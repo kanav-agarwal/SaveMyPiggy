@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="./styles.css">
+
+        <!-- Must be present for all back to front communication -->
+        <script src="./scripts/qwebchannel.js"></script>
+
+        <script src="./scripts/transactions.js" defer></script>
+        <script src="./scripts/communication.js" defer></script>
+        <script src="./scripts/modal.js" defer></script>
+        <script src="./scripts/blur.js"></script>
+
+        <title>SaveMyPiggy</title>
+    </head>
+    <body>
+        <!-- Button to blur sensitive data -->
+        <button id="blur" title="Hide sensitive information" onclick="blurAll()">
+            <img id="blurBtn" width="50px" src="./icons/eye-slash.svg" alt="Toggle visibility">
+        </button>
+
+        <button id="add" title="Add new transaction" onclick="openModal()">
+            <img src="./icons/add.svg" alt="Add Transaction" width="50px">
+        </button>
+
+        <button id="report" title="Generate a Report">
+            <img src="./icons/report.svg" alt="Report" width="50px">
+        </button>
+
+        <!-- Navigation -->
+        <nav>
+            <a onclick="openModal()" class="border">Add Transaction</a>
+            <a href="#bkmrk1" class="border">Income & Expense</a>
+            <a href="#bkmrk2" class="border">Transaction History</a>
+            <a href="help.html" class="border">Help</a>
+            <a href="nopin.html">Update Pin</a>
+        </nav>
+
+        <!-- Application Header -->
+        <header>
+            <img src="./icons/piggybank.svg" alt="Piggy bank">            
+            <div>
+                <h1>SaveMyPiggy</h1>
+                <!-- Show balance -->
+                <h2 id="debug"></h2>
+                <h2>Current balance: <span style="font-size: 1.2em;" id="current_balance"></span></h2>
+            </div>
+
+            <!-- Piggy bank Icon -->
+            <img src="./icons/piggybank.svg" alt="Piggy bank">            
+        </header>
+
+        <!-- Main body container -->
+        <main class="container">
+
+            <!-- Quick actions -->
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div class="quick-row">
+                    <div style="padding: 7px 21px">
+                        <h3>Most Recent Transaction</h3>
+                        <span class="align-left">
+                            <h4 id="mrt-name">No Recent Transactions</h4>
+                            <p>$<span id="mrt-amt" class="money">00.00</span></p>
+                            <p>Date: <span id="mrt-date">N/A</span></p>
+                            <p>Category: <span id="mrt-cat">N/A</span></p>
+                        </span>
+                    </div>
+
+                    <div>
+                        <h3>Add a transaction</h3>
+                        <p>Click the button below to add a transaction and recalculate your spending data.</p>
+                        <button id="modal-open">Add transaction</button>
+                    </div>
+
+                    <div>
+                        <h3>Help</h3>
+                        <p>Click on the link below if you need help learning how to use this application.</p>
+                        <a href="help.html" id="help-btn-link"><button id="help-btn">Help</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add a transaction modal -->
+            <div class="transaction-modal">
+                <div class="misc-pages-header">
+                    <img src="./icons/piggybank.svg" alt="Piggy bank">  
+                    <h1>SaveMyPiggy</h1>
+                    <!-- Piggy bank Icon -->
+                    <img src="./icons/piggybank.svg" alt="Piggy bank">  
+                </div>
+                <form id="transaction-form">
+                    <span class="close">&times;</span>
+
+                    <h3>Add A Transaction</h3>
+                    <p class="red">* Indicates required values.</p>
+                    <br>
+                    
+                    <label for="trans-name" class="required">Transaction Name:</label>
+                    <input name="name" id="trans-name" type="text" placeholder="Safeway" required>
+                    <br>
+
+                    <label for="trans-amt" class="required">Transaction Amount:</label>
+                    <input name="amount" type="number" min="0" step="0.01" id="trans-amt" placeholder="$59.87" required>
+                    <br>
+
+                    <label for="trans-date" class="required">Transaction Date:</label>
+                    <input name="date" type="datetime-local" id="trans-date" required max="9999-12-31T23:59">
+                    <br>
+
+                    <label for="trans-category" class="required">Transaction Category:</label>
+                    <select name="category" id="trans-category" required>
+                        <option value="" selected disabled>Select an option</option>
+                        <option value="createnew"><b>--Create New--</b></option>
+                    </select>
+                    <br>
+
+                    <script>
+                        document.getElementById("trans-category").addEventListener("change", event => {
+                            if (event.target.value == "createnew") {
+                                document.getElementById("hidden-new-cat").classList.remove("hidden");
+                                document.getElementById("trans-new-category").setAttribute("required", "true");
+                            } else {
+                                document.getElementById("hidden-new-cat").classList.add("hidden");
+                                document.getElementById("trans-new-category").removeAttribute("required");
+                            }
+                        });
+                    </script>
+
+                    <div class="hidden" id="hidden-new-cat">
+                        <label for="trans-new-category" class="required">New Category Name:</label>
+                        <input maxlength="12" name="new-category" type="text" id="trans-new-category" placeholder="Grocery Shopping">
+                    </div>
+
+                    <label for="trans-type" class="required">Transaction Type:</label>
+                    <select name="type" id="trans-type">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <br>
+
+                    <button type="submit">Add transaction</button>
+                </form>
+            </div>
+
+            <!-- Income and Expense Data -->
+            <div class="graphs">
+                <!-- Income vs Expense graph and data -->
+                <h2 id="bkmrk1">Income and Expenses Data</h2>
+
+                <select name="inc-exp-filt" id="income-filter" title="Income Filter">
+                    <option value="alltime">All time</option>
+                    <option value="week">Last week</option>
+                    <option value="month">Last month</option>
+                    <option value="year">Last year</option>
+                </select>
+
+                <div class="graph-container">
+
+                    <!-- Income Pie Chart -->
+                    <div class="chart">
+                        <div class="money">
+                            <h3>Income: <span id="income">$</span></h3>
+                            <h4>Income by category:</h4>
+                            <ul id="income-cats">
+
+                            </ul>
+                        </div>
+                        <img class="money" src="./graphs/income-pie.svg" alt="Income Pie Graph">
+                    </div>
+
+                    <!-- Expense Pie Chart -->
+                    <div class="chart">
+                        <div class="money">
+                            <h3>Expenses: <span id="expense">$</span></h3>
+                            <h4>Expense by category:</h4>
+                            <ul id="expense-cats">
+                            
+                            </ul>
+                        </div>
+                        <img class="money" id="expensegraph" src="./graphs/expense-pie.svg" alt="Expenses Pie Graph">
+                    </div>
+
+                    <!-- Income vs Expenses Bar -->
+                    <div class="chart">
+                        <h3>Income vs. Expenses</h3>
+                        <img src="./graphs/incomevexpense.svg" alt="Income vs Expenses Bar Graph" id="incvexpgraph" class="money">
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- Transaction History -->
+            <div class="trans-hist">
+                <h2 id="bkmrk2">Transaction History</h2>
+
+                <!-- Search Parameters -->
+                <div class="trans-hist-search">
+                    <input type="text" id="trans-search" placeholder="Search for transactions">
+                    
+                    <select title="filter" name="trans-select" id="trans-select">
+                        <option value="sao">Select an option</option>
+                    </select>
+                </div>
+
+                <!-- Table of History -->
+                <table id="hist-table">
+                    <tr>
+                        <th>Transaction Name</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </table>
+            </div>
+        </main>
+
+        <footer>
+
+        </footer>
+    </body>
+</html>

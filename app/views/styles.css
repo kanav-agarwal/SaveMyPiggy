@@ -1,0 +1,421 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --light-background: #F4F7FA;
+    --element-background: #E0E5E8;
+    --dark-background: #2C3E50;
+    --accent-color: #27AE60;
+    --header-color: #1F2A44;
+    --text-color: #000000;
+    --header-font: Poppins, Helvetica, sans-serif;
+    --body-font: "Open Sans", Verdana, sans-serif;
+    --financial-font: "Fira Code", monospace;
+}
+
+/* Default global values */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    user-select: none;
+}
+body {
+    background-color: var(--light-background);
+    color: var(--text-color);
+    font-family: var(--body-font);
+    font-size: 15px;
+}
+
+/* Set the scrollbar */
+body::-webkit-scrollbar {
+    width: 0.5em;
+}
+body::-webkit-scrollbar-track {
+    background-color: var(--element-background);
+}
+body::-webkit-scrollbar-thumb {
+    background-color: var(--dark-background);
+    outline: none;
+    border: none;
+}
+
+/* Set fonts */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--header-font);
+    color: var(--header-color);
+}
+.money {
+    font-family: var(--financial-font);
+    text-align: center;
+}
+
+.money h3{
+    font-size: 1.25em;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Navbar */
+nav {
+    font-weight: bold;
+    position: sticky;
+    z-index: 99;
+    top: 0;
+    background-color: var(--dark-background);
+    width: 100%;
+    padding: 15px 20%; /* Adjusted padding for better spacing */
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    justify-content: center; /* Center-align the navigation items */
+    align-items: center; /* Ensure vertical alignment */
+}
+
+.border{
+    border-right: 3px solid green;
+}
+
+nav a, nav a:visited {
+    text-align: center;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 1.2em;
+}
+nav a:hover {
+    color: #21884c;
+    text-decoration: underline;
+}
+/* Accessibility: Add focus styles for nav links */
+nav a:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+@media (max-width: 786px) {
+    nav {
+        grid-template-rows: repeat(4,1fr);
+        grid-template-columns: none;
+    }
+
+    .border{
+        border-right: none;
+        border-bottom: 3px solid green;
+        padding: 0.5em 0;
+    }
+}
+
+.quick-actions
+
+.quick-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px;
+}
+
+.quick-row > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30%;
+    text-align: center;
+    margin: 10px;
+    padding: 7px;
+    font-size: 1.1em;
+    background-color: var(--element-background);
+    border-radius: 12px;
+}
+.align-left {
+    text-align: left;
+    padding: 5px;
+}
+
+#modal-open {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    padding: 5px 10px;
+    font-size: 1em;
+    display: block;
+    margin: 5px auto;
+    border-radius: 10px;
+}
+
+#help-btn{
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    padding: 5px 10px;
+    font-size: 1em;
+    display: block;
+    margin: 5px auto;
+    border-radius: 10px;
+}
+
+#help-btn-link{
+    text-decoration: none;
+}
+
+/* Style the header at the top of the page */
+header {
+    background-color: var(--element-background);
+    padding: 15px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header div{
+    text-align: center;
+    position: relative;
+    font-size: 1.1em;
+}
+
+header img {
+    width: 100px;
+}
+
+.vert-line {
+    height: 100%;
+    border: 1px solid black;
+}
+
+@media (max-width: 630px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+    header > *,
+    header > img {
+        display: block;
+        margin: 0 auto;
+    }
+    .quick-row { flex-direction: column; }
+    .quick-row > * { width: 90%; margin: 10px auto; }
+}
+
+.misc-pages-header {
+    background-color: var(--element-background);
+    padding: 15px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.misc-pages-header h1{
+    text-align: center;
+    font-size: 3em;
+}
+
+.misc-pages-header img {
+    width: 100px;
+}
+
+.transaction-modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #f4f4f9;
+}
+
+#transaction-form {
+    background-color: #ffffff;
+    box-shadow: 1px 1px 25px #eee;
+    margin: 5% auto;
+    border-radius: 12px;
+    padding: 20px;
+    width: max-content;
+    font-size: 1.2em;
+}
+#transaction-form input,
+#transaction-form select {
+    font-size: 1.2em;
+    margin: 7px;
+}
+#transaction-form button {
+    margin: 7px auto;
+    display: block;
+    padding: 5px;
+    border-radius: 5px;
+    width: 50%;
+    background-color: black;
+    color: white;
+    border: none;
+    font-size: 1.2em;
+}
+
+#transaction-form h3{
+    text-align: center;
+    font-size: 1.5em;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}  
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.required::before {
+    content: "*";
+    color: red;
+}
+
+/* Button to blur sensitive data in the bottom right corner */
+#blur, #add, #report {
+    position: fixed;
+    background-color: var(--accent-color);
+    border: none;
+    padding: 12px;
+    border-radius: 100%;
+    bottom: 15px;
+    right: 15px;
+}
+#blur:hover, #add:hover, #report:hover {
+    background-color: #21884c;
+    cursor: pointer;
+}
+#blur:focus, #add:focus, #report:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+#add {
+    bottom: 100px;
+    right: 15px;
+}
+#report {
+    bottom: 190px;
+    right: 15px;
+}
+
+/* Set expenses or negative values to red and bold */
+.red {
+    color: red;
+    font-weight: bold;
+}
+
+.green{
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.container h2 {
+    text-align: center;
+    background-color: var(--dark-background);
+    color: white;
+    padding: 12px;
+    font-size: 1.7em;
+}
+.graph-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 15px;
+    font-size: 1.5rem;
+    gap: 10px;
+}
+
+#income-filter {
+    width: 50%;
+    margin: 15px auto;
+    display: block;
+    text-align: center;
+    font-size: 1.1em;
+    padding: 3px;
+}
+
+#mrt-cat { text-transform: capitalize; }
+#income-cats,
+#expense-cats {
+    text-transform: capitalize;
+}
+
+.chart {
+    background-color: var(--element-background);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.chart ul {
+    list-style-type: none;
+}
+.chart > img {
+    width: 25vw;
+    justify-self: center;
+    align-self: center;
+    margin: auto auto;
+}
+
+@media (max-width: 1000px) {
+    .graph-container {
+        grid-template-columns: 1fr;
+        font-size: 1.2rem;
+    }
+    .chart {
+        width: -moz-fit-content;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    .chart > img {
+        width: 75vw;
+    }
+}
+
+.trans-hist-search {
+    margin: 12px auto;
+    width: 25%;
+    font-size: 1.1em;
+}
+.trans-hist-search > input[type='text'],
+.trans-hist-search > select {
+    font-size: 1em;
+    display: block;
+    margin: 1px auto;
+    padding: 3px;
+    width: 100%;
+}
+
+/* Style the transaction history table */
+#hist-table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 15px auto;
+    font-size: 1.2em;
+}
+#hist-table td, #hist-table th {
+    text-transform: capitalize;
+    border: 1px solid black;
+    padding: 5px;
+}
+#hist-table td input, 
+#hist-table td select {
+    font-size: 1em;
+    padding: 3px;
+}
+#hist-table tr:nth-child(even) { background-color: var(--element-background); }
+#hist-table tr:hover td { background-color: #EEE; }
+
+
+footer {
+    margin: 12em;
+}
